@@ -1,0 +1,7 @@
+dist/
+.astro/
+node_modules/
+bun.lock
+bun.lockb
+public/
+LICENSE

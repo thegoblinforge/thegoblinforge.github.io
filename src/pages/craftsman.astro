@@ -1,0 +1,51 @@
+---
+import { getEntry, render } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+
+const craftsman = await getEntry("craftsman", "main");
+if (!craftsman) {
+  throw new Error("Missing src/content/craftsman/main.md");
+}
+const { Content } = await render(craftsman);
+const { name, tagline, avatarUrl, links } = craftsman.data;
+---
+
+<Layout title="The Craftsman" description={tagline}>
+  <article class="mx-auto max-w-3xl px-6 py-12">
+    <header class="mb-8 flex flex-col items-start gap-6 sm:flex-row">
+      <img
+        src={avatarUrl}
+        alt={name}
+        class="ring-primary/60 h-28 w-28 rounded-full ring-2"
+      />
+      <div class="space-y-2">
+        <p class="text-base-content/60 text-sm tracking-wider uppercase">
+          The Craftsman
+        </p>
+        <h1 class="text-4xl font-bold tracking-tight">{name}</h1>
+        <p class="text-base-content/80 text-lg">{tagline}</p>
+        {
+          links.length > 0 && (
+            <div class="flex flex-wrap gap-2 pt-2">
+              {links.map((link) => (
+                <a
+                  href={link.url}
+                  class="btn btn-outline btn-sm"
+                  rel="noopener"
+                >
+                  {link.label} ↗
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </header>
+
+    <div
+      class="prose prose-invert prose-headings:tracking-tight prose-a:text-primary max-w-none"
+    >
+      <Content />
+    </div>
+  </article>
+</Layout>

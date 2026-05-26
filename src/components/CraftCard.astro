@@ -1,0 +1,62 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  craft: CollectionEntry<"crafts">;
+}
+
+const { craft } = Astro.props;
+const { title, summary, status, tags, logo } = craft.data;
+
+const statusLabel: Record<typeof status, string> = {
+  active: "Active",
+  wip: "WIP",
+  archived: "Archived",
+};
+
+const statusBadge: Record<typeof status, string> = {
+  active: "badge-success",
+  wip: "badge-warning",
+  archived: "badge-ghost",
+};
+---
+
+<a
+  href={`/crafts/${craft.id}`}
+  class="card bg-base-200 hover:bg-base-300 border-base-300 hover:border-primary/60 group border transition"
+>
+  <div class="card-body gap-3">
+    <div class="flex items-center gap-4">
+      {
+        logo && (
+          <div class="bg-base-100 ring-base-300 grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-lg ring-1">
+            <img
+              src={logo}
+              alt=""
+              class="h-full w-full object-contain p-1"
+              loading="lazy"
+            />
+          </div>
+        )
+      }
+      <div class="min-w-0 flex-1">
+        <div class="flex items-start justify-between gap-3">
+          <h3 class="card-title truncate text-lg">{title}</h3>
+          <span class:list={["badge badge-sm shrink-0", statusBadge[status]]}>
+            {statusLabel[status]}
+          </span>
+        </div>
+      </div>
+    </div>
+    <p class="text-base-content/80 text-sm">{summary}</p>
+    {
+      tags.length > 0 && (
+        <div class="flex flex-wrap gap-1.5 pt-1">
+          {tags.map((tag) => (
+            <span class="badge badge-outline badge-sm">{tag}</span>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</a>

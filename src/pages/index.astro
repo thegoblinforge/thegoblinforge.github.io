@@ -1,0 +1,79 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import CraftCard from "../components/CraftCard.astro";
+import heroImage from "../assets/goblinforge-hero.png";
+
+const crafts = (await getCollection("crafts")).sort((a, b) => {
+  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+  return b.data.startedAt.getTime() - a.data.startedAt.getTime();
+});
+
+const craftsman = await getEntry("craftsman", "main");
+---
+
+<Layout>
+  <section class="mx-auto max-w-5xl px-6 pt-16 pb-12">
+    <div class="flex flex-col items-start gap-10 md:flex-row">
+      <Image
+        src={heroImage}
+        alt="The Goblin Forge"
+        widths={[240, 360, 480, 640]}
+        sizes="(min-width: 768px) 14rem, 10rem"
+        format="webp"
+        quality={80}
+        class="ring-base-300 w-40 rounded-xl shadow-lg ring-1 md:w-56"
+      />
+      <div class="flex-1 space-y-4">
+        <h1 class="text-4xl font-bold tracking-tight md:text-5xl">
+          The Goblin Forge
+        </h1>
+        <p class="text-primary/90 text-lg italic">
+          A one-craftsman workshop for software side projects.
+        </p>
+        <p class="text-base-content/80 max-w-2xl leading-relaxed">
+          thegoblinforge is a workshop for the things I build in my own time —
+          prototypes, products, and everything in between. The work lives here,
+          one craft at a time.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 py-8">
+    <div class="mb-6 flex items-baseline justify-between">
+      <h2 class="text-2xl font-semibold">Crafts</h2>
+      <span class="text-base-content/60 text-sm">
+        {crafts.length}
+        {crafts.length === 1 ? "craft" : "crafts"}
+      </span>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      {crafts.map((craft) => <CraftCard craft={craft} />)}
+    </div>
+  </section>
+
+  {
+    craftsman && (
+      <section class="mx-auto max-w-5xl px-6 py-12">
+        <div class="card bg-base-200 border-base-300 border">
+          <div class="card-body flex-row items-center gap-6">
+            <img
+              src={craftsman.data.avatarUrl}
+              alt={craftsman.data.name}
+              class="ring-primary/60 h-20 w-20 rounded-full ring-2"
+            />
+            <div class="flex-1">
+              <h2 class="card-title">Meet the craftsman</h2>
+              <p class="text-base-content/80">{craftsman.data.tagline}</p>
+            </div>
+            <a href="/craftsman" class="btn btn-primary btn-sm">
+              About →
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Layout>

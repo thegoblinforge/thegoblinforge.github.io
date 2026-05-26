@@ -1,0 +1,31 @@
+---
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isHome = pathname === "/";
+const isCraftsman = pathname.startsWith("/craftsman");
+---
+
+<header class="border-base-300 bg-base-200/60 border-b backdrop-blur">
+  <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+    <a href="/" class="group flex items-center gap-3">
+      <img
+        src="/goblin_forge_small.png"
+        alt=""
+        class="ring-base-300 group-hover:ring-primary h-9 w-9 rounded-md object-cover ring-1 transition"
+      />
+      <span class="text-base-content font-semibold tracking-tight">
+        The Goblin Forge
+      </span>
+    </a>
+    <nav class="flex items-center gap-2 text-sm">
+      <a href="/" class:list={["btn btn-ghost btn-sm", isHome && "btn-active"]}>
+        Crafts
+      </a>
+      <a
+        href="/craftsman"
+        class:list={["btn btn-ghost btn-sm", isCraftsman && "btn-active"]}
+      >
+        The Craftsman
+      </a>
+    </nav>
+  </div>
+</header>
